@@ -1,4 +1,4 @@
-function angle(a, b) {
+function angle (a, b) {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
   const angle = Math.atan2(dy, dx);
@@ -21,20 +21,40 @@ function rand(min, max) {
   return Math.floor(randf(min, max));
 }
 
+let random = Math.random;
 function randf(min, max) {
   if (max == null) {
     max = min || 1;
     min = 0;
   }
-  return Math.random() * (max - min) + min;
+  return random() * (max - min) + min;
+}
+
+function randOneIn(max) {
+  return rand(0, max) === 0;
 }
 
 function randOneFrom(items) {
-  return items[rand(items.length)];
+  return items[rand(0, items.length)];
 }
 
-function randOneIn(max = 2) {
-  return rand(0, max) === 0;
+let seed = 42;
+function randomSeed(s) {
+  if (!isNaN(s)) {
+    seed = s;
+  }
+  return seed;
+}
+
+function randomSeeded() {
+  // https://en.wikipedia.org/wiki/Linear_congruential_generator
+  seed = (seed * 16807 + 0) % 2147483647;
+  return seed / 2147483647;
+}
+
+function useSeededRandom(blnUse = true) {
+  randomSeeded();
+  random = blnUse ? randomSeeded : Math.random;
 }
 
 export default {
@@ -43,6 +63,8 @@ export default {
   distance,
   rand,
   randf,
+  randOneIn,
   randOneFrom,
-  randOneIn
+  randomSeed,
+  useSeededRandom
 };

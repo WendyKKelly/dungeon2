@@ -64,6 +64,16 @@ class CanvasRenderer {
         } else if (child.style && child.w && child.h) {
           ctx.fillStyle = child.style.fill;
           ctx.fillRect(0, 0, child.w, child.h);
+        } else if (child.path) {
+          const [head, ...tail] = child.path;
+          if (child.path.length > 1) {
+            ctx.fillStyle = child.style.fill || "#fff";
+            ctx.beginPath();
+            ctx.moveTo(head.x, head.y);
+            tail.forEach(({ x, y }) => ctx.lineTo(x, y));
+            ctx.closePath();
+            ctx.fill();
+          }
         }
 
         // Render any child sub-nodes
